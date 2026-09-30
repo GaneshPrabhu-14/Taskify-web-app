@@ -44,6 +44,20 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    script {
+                        if (isUnix()) {
+                            sh 'mvn sonar:sonar -Dsonar.projectKey=taskify-web-app'
+                        } else {
+                            bat 'mvn sonar:sonar -Dsonar.projectKey=taskify-web-app'
+                        }
+                    }
+                }
+            }
+        }
+
         stage('Docker Image Build') {
             steps {
                 script {
