@@ -17,6 +17,11 @@ pipeline {
         DOCKER_IMAGE = 'ganesha06/taskify-web-app:latest'
     }
 
+
+
+
+
+
     stages {
         stage('Git Checkout') {
             steps {
