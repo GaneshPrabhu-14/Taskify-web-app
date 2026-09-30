@@ -10,7 +10,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_IMAGE = 'YOUR_DOCKERHUB_USERNAME/taskify-web-app:latest'
+        DOCKER_IMAGE = 'ganesha06/taskify-web-app:latest'
     }
 
     stages {
@@ -47,6 +47,9 @@ pipeline {
         stage('Docker Image Build') {
             steps {
                 script {
+                    if (DOCKER_IMAGE.contains('YOUR_DOCKERHUB_USERNAME') || DOCKER_IMAGE != DOCKER_IMAGE.toLowerCase()) {
+                        error('Set DOCKER_IMAGE to your lowercase Docker Hub username and image name.')
+                    }
                     if (isUnix()) {
                         sh 'docker build -t "$DOCKER_IMAGE" .'
                     } else {
@@ -58,7 +61,7 @@ pipeline {
 
         stage('Push to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-cred-id', usernameVariable: 'ganesha06', passwordVariable: 'IamIronman')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-cred-id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     script {
                         if (isUnix()) {
                             sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
