@@ -9,6 +9,10 @@ pipeline {
         skipDefaultCheckout(true)
     }
 
+    triggers {
+        githubPush()
+    }
+
     environment {
         DOCKER_IMAGE = 'ganesha06/taskify-web-app:latest'
     }
