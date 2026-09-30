@@ -20,6 +20,37 @@ Build the deployable WAR:
 mvn package
 ```
 
+### Run with Docker
+
+Make sure Docker Desktop is running and `.env` contains a valid MongoDB Atlas URI. From the project root, build the image and start the app:
+
+```powershell
+docker build -t taskify .
+docker run --name taskify -p 8080:8080 --env-file .env taskify
+```
+
+Open `http://localhost:8080/`. Keep the terminal running while using the app; press `Ctrl+C` to stop it. To start the existing container again later, run:
+
+```powershell
+docker start -ai taskify
+```
+
+If you change `.env`, recreate the container so it receives the updated environment:
+
+```powershell
+docker rm -f taskify
+docker run --name taskify -p 8080:8080 --env-file .env taskify
+```
+
+If you change application source code, rebuild the WAR and image before recreating the container:
+
+```powershell
+mvn package
+docker build -t taskify .
+docker rm -f taskify
+docker run --name taskify -p 8080:8080 --env-file .env taskify
+```
+
 Deploy `target/Taskify-web-app.war` to a Java 17-compatible Servlet 4 container such as Tomcat 9, then open `http://localhost:8080/Taskify-web-app/`. The environment variables must be available to the Tomcat process, or the project-root `.env` must be readable from its working directory.
 
 ## API routes
